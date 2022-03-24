@@ -1,40 +1,55 @@
-//
-// This is only a SKELETON file for the 'Circular Buffer' exercise. It's been provided as a
-// convenience to get you started writing code faster.
-//
-
-class CircularBuffer {
-  constructor() {
-    throw new Error('Remove this statement and implement this function');
+export default class CircularBuffer {
+  constructor(capacity) {
+    this.buffer = new Array(capacity);
+    this.head = 0;
+    this.tail = 0;
+    this.size = 0;
+    this.capacity = capacity;
   }
 
-  write() {
-    throw new Error('Remove this statement and implement this function');
+  write(value) {
+    if (this.isFull()) throw new BufferFullError();
+    this.buffer[this.tail] = value;
+    this.tail = (this.tail + 1) % this.capacity;
+    this.size++;
   }
 
   read() {
-    throw new Error('Remove this statement and implement this function');
+    if (this.isEmpty()) throw new BufferEmptyError();
+    let value = this.buffer[this.head];
+    this.buffer[this.head] = undefined;
+    this.head = (this.head + 1) % this.capacity;
+    this.size--;
+    return value;
   }
 
-  forceWrite() {
-    throw new Error('Remove this statement and implement this function');
+  forceWrite(value) {
+    this.buffer[this.tail] = value;
+    this.tail = (this.tail + 1) % this.capacity;
+    this.size++;
   }
 
   clear() {
-    throw new Error('Remove this statement and implement this function');
+    [this.buffer, this.head, this.tail, this.size] = [new Array(this.capacity), 0, 0, 0];
+  }
+
+  isEmpty() {
+    return this.size === 0;
+  }
+
+  isFull() {
+    return this.size === this.capacity;
   }
 }
 
-export default CircularBuffer;
-
 export class BufferFullError extends Error {
   constructor() {
-    throw new Error('Remove this statement and implement this function');
+    super('Buffer is full');
   }
 }
 
 export class BufferEmptyError extends Error {
   constructor() {
-    throw new Error('Remove this statement and implement this function');
+    super('Buffer is empty');
   }
 }
